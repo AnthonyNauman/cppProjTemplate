@@ -1,0 +1,61 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "Existing Dockerfile",
+	"build": {
+		// Sets the run context to one level up instead of the .devcontainer folder.
+		"context": "..",
+		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+		"dockerfile": "./Dockerfile.vscode"
+	},
+	// "features": {
+	// 	"ghcr.io/devcontainers-extra/features/apt-packages:1": {
+	// 		"clean_ppas": true,
+	// 		"preserve_apt_list": true,
+	// 		"packages": "htop",
+	// 		"ppas": "ppa:deadsnakes/ppa"
+	// 	}
+	// },
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Uncomment the next line to run commands after the container is created.
+	// "postCreateCommand": "cat /etc/os-release",
+	// Mount folder
+	// "mounts": [
+	//     {
+	//         "source": "/media/data/docker_data/vscode",
+	//         "target": "/home/user/vscode_builds",
+	//         "type": "bind"
+	//     },
+	//     {
+	//         "source": "/run",
+	//         "target": "/run",
+	//         "type": "bind"
+	//     }
+	// ],
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"cmake.buildDirectory": "/home/user/vscode_builds/${workspaceFolderBasename}"
+			},
+			"extensions": [
+				"ms-vscode.cpptools-extension-pack",
+				"ms-vscode.cpptools",
+				"xaver.clang-format",
+				"twxs.cmake",
+				"eamodio.gitlens",
+				"aaron-bond.better-comments",
+				"thang-nm.catppuccin-perfect-icons",
+				"huybui663.bookmarksh",
+				"amiralizadeh9480.cpp-helper",
+				"mhutchie.git-graph"
+			]
+		}
+	},
+	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
+	"remoteUser": "user",
+	"containerUser": "user"
+}

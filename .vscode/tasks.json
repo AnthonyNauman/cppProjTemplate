@@ -1,0 +1,126 @@
+{
+	"version": "2.0.0",
+	"configurations": [
+		{
+			"type": "TargetName",
+			"request": "launch",
+			"name": "Target name",
+			"default": "app"
+		}
+	],
+	"inputs": [
+		{
+			"id": "LocalPass",
+			"default": "user",
+			"type": "promptString",
+			"description": "Local user password",
+			"password": true
+		},
+		{
+			"id": "BuildType",
+			"description": "Cmake project build type.",
+			"options": [
+				"Debug",
+				"Release",
+				"RelWithDebInfo",
+				"MinSizeRel"
+			],
+			"type": "pickString",
+			"default": "Release"
+		},
+		{
+			"id": "TargetName",
+			"description": "Build target name",
+			"options": [
+				"app"
+			],
+			"type": "pickString",
+			"default": "app"
+		}
+	],
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: Build x86_64 in Docker",
+			"command": "./build.sh",
+			"args": [
+				"--arch=x86_64",
+				"--docker",
+				"--build-type=${input:BuildType}"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiBlue",
+				"id": "vm-connect"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Build armv7hf in Docker",
+			"command": "./build.sh",
+			"args": [
+				"--arch=armv7hf",
+				"--docker",
+				"--build-type=${input:BuildType}"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiBlue",
+				"id": "vm-connect"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Build Local",
+			"command": "./build.sh",
+			"args": [
+				"--arch=x86_64",
+				"--build-type=${input:BuildType}"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "circuit-board"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Run Target",
+			"command": "./install/${input:TargetName}",
+			// "args": [
+			// 	"--arch=x86_64",
+			// 	"--build-type=${input:BuildType}"
+			// ],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "debug-start"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Run App",
+			"command": "./run.sh",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "debug-start"
+			}
+		}
+	]
+}
