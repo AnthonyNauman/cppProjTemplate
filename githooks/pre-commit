@@ -1,9 +1,0 @@
-#!/bin/sh
-
-echo "=== Formatting files on git commit ==="
-for file in `git diff --staged --name-only | grep -i -E '\.(cpp|h|hpp)$'`; do
-	
-	clang-format -i ${file}
-	git add ${file}
-	echo "Formatted: " ${file}
-done
