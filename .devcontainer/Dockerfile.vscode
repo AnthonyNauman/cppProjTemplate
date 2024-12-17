@@ -10,8 +10,10 @@ RUN apt update \
     && apt -y upgrade \
     && apt -y autoremove \
     && apt -y autoclean \
-    && apt install -y --no-install-recommends clang-format clang-tidy mc \
-    gdb
+    && apt install -y --no-install-recommends clang-tidy mc \
+    gdb python pip
+
+RUN pip install clang-format
 
 RUN apt-get update && \
     apt-get install -y \

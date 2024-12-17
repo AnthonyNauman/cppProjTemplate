@@ -1,0 +1,98 @@
+/* 
+* Then you can replace original keybindings.json with this file
+* Open (Ctrl+K Ctrl+S) or (File->Preferences->Keyboard Shortcuts
+* Then click "Open Keyboard Shortcuts (JSON)" at the top of opened window
+*/
+// Place your key bindings in this file to override the defaults
+[
+	// Go to
+	{
+		"key": "ctrl+p",
+		"command": "workbench.action.quickOpen"
+	},
+	{
+		"key": "ctrl+o",
+		"command": "editor.action.accessibleViewGoToSymbol",
+		"when": "accessibilityHelpIsShown && accessibleViewGoToSymbolSupported || accessibleViewGoToSymbolSupported && accessibleViewIsShown"
+	},
+	{
+		"key": "ctrl+o",
+		"command": "workbench.action.gotoSymbol",
+		"when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
+	},
+	// Comments
+	{
+		"key": "ctrl+/",
+		"command": "editor.action.commentLine",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "ctrl+alt+/",
+		"command": "editor.action.blockComment",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	// Formatting
+	{
+		"key": "shift+alt+f",
+		"command": "editor.action.formatDocument.none",
+		"when": "editorTextFocus && !editorHasDocumentFormattingProvider && !editorReadonly"
+	},
+	// Bookmarks
+	{
+		"key": "alt+b",
+		"command": "bookmarksh.toggleBookmark",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "ctrl + alt + b",
+		"command": "bookmarksh.filterAll"
+	},
+	// Split editor
+	{
+		"key": "ctrl+\\",
+		"command": "workbench.action.splitEditor"
+	},
+	{
+		"key": "ctrl+shift+\\",
+		"command": "workbench.action.splitEditorDown"
+	},
+	// Cmake
+	{
+		"key": "shift+f7",
+		"command": "cmake.buildWithTarget",
+		"when": "cmake:enableFullFeatureSet && !cmake:hideBuildCommand"
+	},
+	{
+		"key": "f7",
+		"command": "cmake.build",
+		"when": "cmake:enableFullFeatureSet && !cmake:hideBuildCommand"
+	},
+	{
+		"key": "shift+f6",
+		"command": "cmake.outline.cleanConfigure"
+	},
+	{
+		"key": "f6",
+		"command": "cmake.configure"
+	},
+	{
+		"key": "shift+f5",
+		"command": "cmake.debugTarget",
+		"when": "cmake:enableFullFeatureSet && inCMakeProject && !cmake:hideDebugCommand && !inDebugMode"
+	},
+	{
+		"key": "f5",
+		"command": "cmake.launchTarget",
+		"when": "cmake:enableFullFeatureSet && !cmake:hideDebugCommand && !inDebugMode"
+	},
+	// Tasks
+	{
+		"key": "f9",
+		"command": "workbench.action.tasks.runTask"
+	},
+	{
+		"key": "f9",
+		"command": "-editor.debug.action.toggleBreakpoint",
+		"when": "debuggersAvailable && disassemblyViewFocus || debuggersAvailable && editorTextFocus"
+	}
+]

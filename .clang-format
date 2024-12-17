@@ -1,0 +1,47 @@
+BasedOnStyle: Mozilla 
+IndentWidth : 4 
+AccessModifierOffset: -4 
+NamespaceIndentation: All 
+UseTab: Never 
+BreakBeforeBraces: Custom 
+BraceWrapping: 
+  AfterClass: true 
+  AfterStruct: true 
+  AfterUnion: false 
+  AfterEnum: true 
+  AfterNamespace: false 
+  AfterExternBlock: false
+  SplitEmptyFunction: false 
+  AfterFunction: true 
+  BeforeCatch: false 
+  BeforeElse: false 
+  BeforeWhile: false 
+  AfterCaseLabel: true 
+  AfterControlStatement: Never 
+  BeforeLambdaBody: true
+
+AlignTrailingComments: true 
+SpacesBeforeTrailingComments : 1 
+AllowShortBlocksOnASingleLine: true 
+AllowShortIfStatementsOnASingleLine: false 
+AllowShortCaseLabelsOnASingleLine: true 
+AllowShortFunctionsOnASingleLine: true 
+IndentCaseLabels: true
+
+
+SpacesInSquareBrackets: false 
+SpacesInParentheses: false 
+SpacesInAngles: false 
+SpacesInCStyleCastParentheses: false 
+SpacesInConditionalStatement: false
+SpaceInEmptyBlock: false
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments : true
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+
+
+SpaceBeforeRangeBasedForLoopColon: true
+
+PointerAlignment : Left 
+ColumnLimit : 220

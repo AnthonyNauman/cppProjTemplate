@@ -3,7 +3,8 @@
 
 int main()
 {
-	std::string str = "aaa";
-	std::cout << "Test App " << str << std::endl;
-	return 0;
+                std::string str = "aaa";
+    std::cout <<        "Test App " << str << std::endl;
+
+    return 0;
 }

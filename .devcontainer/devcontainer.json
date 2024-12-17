@@ -39,7 +39,260 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"cmake.buildDirectory": "/home/user/vscode_builds/${workspaceFolderBasename}"
+				// Paths
+				"cmake.buildDirectory": "/home/user/vscode_builds/${workspaceFolderBasename}",
+				"cmake.showOptionsMovedNotification": false,
+				"cmake.showConfigureWithDebuggerNotification": false,
+				// Git
+				"git.autofetch": true,
+				// Formatting
+				"clang-format.executable": "/usr/local/bin/clang-format",
+				"editor.formatOnSaveMode": "modifications",
+				"editor.formatOnSave": true,
+				"C_Cpp.formatting": "clangFormat",
+				// Main editor settings
+				"window.openFilesInNewWindow": "off",
+				"editor.tabSize": 4,
+				"editor.folding": false,
+				"editor.insertSpaces": false,
+				"editor.minimap.enabled": false,
+				"editor.detectIndentation": true,
+				"editor.suggestSelection": "first",
+				"editor.quickSuggestionsDelay": 0,
+				"editor.multiCursorModifier": "alt",
+				"editor.glyphMargin": false,
+				"window.zoomLevel": 1,
+				// Wrapping
+				"editor.wordWrap": "bounded",
+				"editor.wrappingIndent": "same",
+				"editor.wordWrapColumn": 240,
+				// Scrolling
+				"editor.smoothScrolling": true,
+				"editor.scrollBeyondLastLine": true,
+				// Appearance
+				"editor.bracketPairColorization.enabled": true,
+				"editor.scrollbar.horizontal": "hidden",
+				"editor.unicodeHighlight.ambiguousCharacters": false,
+				"window.commandCenter": false,
+				"workbench.iconTheme": "catppuccin-perfect-dracula",
+				"scm.showHistoryGraph": false,
+				"scm.showIncomingChanges": "never",
+				"scm.showOutgoingChanges": "never",
+				// Cursor
+				"editor.cursorBlinking": "phase",
+				"editor.cursorStyle": "line",
+				"editor.cursorSmoothCaretAnimation": "explicit",
+				// Font
+				"editor.fontSize": 16,
+				"editor.lineHeight": 20,
+				"editor.fontLigatures": true,
+				"editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+				"editor.inlayHints.fontFamily": "JetBrainsMono Nerd Font Mono",
+				// Terminal
+				"terminal.integrated.fontSize": 16,
+				// CMake
+				"cmake.configureOnOpen": false,
+				"cmake.pinnedCommands": [
+					"workbench.action.tasks.configureTaskRunner",
+					"workbench.action.tasks.runTask"
+				],
+				// Explorer
+				"explorer.confirmDelete": false,
+				"explorer.compactFolders": false,
+				"explorer.confirmDragAndDrop": false,
+				"window.menuBarVisibility": "compact",
+				"security.workspace.trust.untrustedFiles": "open",
+				// Comments
+				"better-comments.tags": [
+					{
+						"tag": "?",
+						"color": "#C10020",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "/*",
+						"color": "#0BDA51",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "warning",
+						"color": "#C10020",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "! \\warning",
+						"color": "#C10020",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "!\\warning",
+						"color": "#C10020",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "brief",
+						"color": "#0067A5",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "! \\brief",
+						"color": "#0067A5",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "!\\brief",
+						"color": "#0067A5",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "param",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "! \\param",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "!\\param",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "note",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "! \\note",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "!\\note",
+						"color": "#00FFFF",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "todo",
+						"color": "#FF8C00",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "! \\todo",
+						"color": "#FF8C00",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "!\\todo",
+						"color": "#FF8C00",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					},
+					{
+						"tag": "*",
+						"color": "#0BDA51",
+						"strikethrough": false,
+						"underline": false,
+						"backgroundColor": "transparent",
+						"bold": false,
+						"italic": false
+					}
+				],
+				"better-comments.highlightPlainText": true,
+				"diffEditor.ignoreTrimWhitespace": true,
+				// CPP Helper
+				"CppHelper.SourcePattern": [
+					"{FILE}.inl",
+					"{FILE}.cpp",
+					"{FILE}.cxx",
+					"{FILE}.cc",
+					"{FILE}.cp",
+					"{FILE}.c",
+					"/src/{FILE}.inl",
+					"/src/{FILE}.cpp",
+					"/src/{FILE}.cxx",
+					"/src/{FILE}.cc",
+					"/src/{FILE}.cp",
+					"/src/{FILE}.c",
+					"/source/{FILE}.inl",
+					"/source/{FILE}.cpp",
+					"/source/{FILE}.cxx",
+					"/source/{FILE}.cc",
+					"/source/{FILE}.cp",
+					"/source/{FILE}.c"
+				],
+				"[cpp]": {
+					"editor.defaultFormatter": "xaver.clang-format"
+				}
 			},
 			"extensions": [
 				"ms-vscode.cpptools-extension-pack",
@@ -51,6 +304,7 @@
 				"thang-nm.catppuccin-perfect-icons",
 				"huybui663.bookmarksh",
 				"amiralizadeh9480.cpp-helper",
+				"ms-azuretools.vscode-docker",
 				"mhutchie.git-graph"
 			]
 		}
