@@ -5,15 +5,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG USERNAME=user
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ARG CONAN_REVISIONS_ENABLED=1
 
 RUN apt update \
     && apt -y upgrade \
     && apt -y autoremove \
     && apt -y autoclean \
     && apt install -y --no-install-recommends clang-tidy mc \
-    gdb python pip
+    gdb python pip doxygen doxygen-doc
 
-RUN pip install clang-format
+RUN pip install clang-format conan
 
 RUN apt-get update && \
     apt-get install -y \
