@@ -1,13 +1,5 @@
 {
 	"version": "2.0.0",
-	"configurations": [
-		{
-			"type": "TargetName",
-			"request": "launch",
-			"name": "Target name",
-			"default": "app"
-		}
-	],
 	"inputs": [
 		{
 			"id": "LocalPass",
@@ -120,6 +112,19 @@
 			"icon": {
 				"color": "terminal.ansiGreen",
 				"id": "debug-start"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Utils: Docs generating",
+			"command": "./scripts/config_doxygen.sh",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "new-file"
 			}
 		}
 	]
