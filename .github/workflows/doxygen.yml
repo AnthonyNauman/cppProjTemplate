@@ -13,10 +13,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Check Installed Software
-        run: echo " ============ Check Installed Software ============"
+        run: whereis git && whereis python && whereis pip
+        shell: bash
         
       - name: Clone Project
-        run: echo " ============Clone Project ============"
+        uses: actions/checkout@v4
 
       - name: Install Doxygen
         run: echo " ============Install Doxygen ============"
