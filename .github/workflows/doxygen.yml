@@ -19,6 +19,7 @@ jobs:
       - name: Clone Project
         uses: actions/checkout@v4
         with:
+          ref: feature/docs
           submodules: 'recursive'
 
       - name: Install Doxygen
