@@ -1,0 +1,50 @@
+name: Project Documentation
+on:
+  push:
+    branches:
+      - feature/docs
+      - master
+  pull_request:
+   branches:
+   - main
+permissions:
+  pages: write
+  deployments: write
+  id-token: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-20.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check Installed Software
+        run: whereis git && whereis python && whereis pip
+        shell: bash
+        
+      - name: Clone Project
+        uses: actions/checkout@v4
+        with:
+          ref: feature/docs
+          submodules: 'recursive'
+
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen doxygen-doc graphviz
+        shell: bash
+
+      - name: Run Doxygen
+        run: scripts/config_doxygen.sh
+
+      - name: Upload Docs
+        #id: deployment
+        uses: actions/upload-pages-artifact@v3 
+        with:
+          path: documentation/html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+        
+      - name: Deploy To Gihub Pages
+        id: deployment
+        uses: actions/deploy-pages@4.0.5
