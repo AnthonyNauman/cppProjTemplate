@@ -7,10 +7,17 @@ on:
   pull_request:
    branches:
    - main
+permissions:
+  pages: write
+  deployments: write
+  id-token: write
 
 jobs:
   docs:
     runs-on: ubuntu-20.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check Installed Software
         run: whereis git && whereis python && whereis pip
@@ -36,7 +43,8 @@ jobs:
           path: documentation/html
 
       - name: Setup Pages
-        run: echo " ============ Setup Pages ============"
+        uses: actions/configure-github-pages@v2
         
       - name: Deploy To Gihub Pages
-        run: echo " ============ Deploy To Gihub Pages ============"
+        id: deployment
+        uses: actions/deploy-pages@v1
