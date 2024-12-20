@@ -1,0 +1,34 @@
+name: Project Documentation
+on:
+  push:
+    branches:
+      - feature/docs
+      - master
+  pull_request:
+   branches:
+   - main
+
+jobs:
+  docs:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check Installed Software
+        run: echo " ============ Check Installed Software ============"
+        
+      - name: Clone Project
+        run: echo " ============Clone Project ============"
+
+      - name: Install Doxygen
+        run: echo " ============Install Doxygen ============"
+
+      - name: Run Doxygen
+        run: echo " ============ Run Doxygen ============"
+
+      - name: Upload Docs
+        run: echo " ============ Upload Docs ============"
+
+      - name: Setup Pages
+        run: echo " ============ Setup Pages ============"
+        
+      - name: Deploy To Gihub Pages
+        run: echo " ============ Deploy To Gihub Pages ============"
