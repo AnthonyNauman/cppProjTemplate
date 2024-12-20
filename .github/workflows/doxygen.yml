@@ -1,13 +1,11 @@
 name: Project Documentation
 on:
   push:
-    branches:
-      - release/*
-      - master
+    branches: [ "master", "release/*" ]
   pull_request:
-   branches:
-   - master
+   branches: ["master"]
 permissions:
+  contents: read
   pages: write
   deployments: write
   id-token: write
@@ -42,9 +40,10 @@ jobs:
         with:
           path: documentation/html
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-        
-      - name: Deploy To Gihub Pages
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v2
+
+      - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v3
+        
