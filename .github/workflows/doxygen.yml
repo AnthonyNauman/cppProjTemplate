@@ -2,11 +2,11 @@ name: Project Documentation
 on:
   push:
     branches:
-      - feature/docs
-      - main
+      - release/*
+      - master
   pull_request:
    branches:
-   - main
+   - master
 permissions:
   pages: write
   deployments: write
