@@ -26,10 +26,13 @@ jobs:
         shell: bash
 
       - name: Run Doxygen
-        run: echo " ============ Run Doxygen ============"
+        run: scripts/config_doxygen.sh
 
       - name: Upload Docs
-        run: echo " ============ Upload Docs ============"
+        #id: deployment
+        uses: actions/upload-pages-artifact@v3 
+        with:
+          path: documentation/html
 
       - name: Setup Pages
         run: echo " ============ Setup Pages ============"
