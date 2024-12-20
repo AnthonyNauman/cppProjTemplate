@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# === Help info === 
+source $(dirname $0)/project_info.sh
 
+# === Help info === 
 showHelp() {
 cat << EOF  
 Usage: ./build.sh -v <version> -t <build-type> [-hd]
@@ -21,17 +22,18 @@ Calling build.sh script without parameters will run the script with defaults:
 
 EOF
 }
+# -v, -version,       --version               Project version.
 
 # === Script args === 
 
-export version=1.0
+export version=$PROJ_VERSION
 export arch=x86_64
 export use_docker=false
 export build_type=Release
 
 # === Script args === 
 
-options=$(getopt -l "help,version:,arch:,docker,build-type:" -o "hv:a:dt:" -a -- "$@")
+options=$(getopt -l "help,arch:,docker,build-type:" -o "hv:a:dt:" -a -- "$@") #,version:
 
 eval set -- "$options"
 
@@ -42,10 +44,10 @@ case "$1" in
     showHelp
     exit 0
     ;;
--v|--version) 
-    shift
-    export version="$1"
-    ;;
+# -v|--version) 
+#     shift
+#     export version="$1"
+#     ;;
 -a|--arch) 
     shift
     export arch="$1"
@@ -70,8 +72,7 @@ docker_context=gcc10
 compiler_version=10
 tag_num=2
 base_image_name=geosx/ubuntu20.04-gcc10:261-585
-project_name=app
-project_source_path=$(pwd)/apps/$project_name
+project_source_path=$SOURCE_DIR/$PROJ_NAME
 install_folder=$(pwd)/install
 build_type_docker="$build_type"
 
@@ -102,7 +103,7 @@ if [ $use_docker == false ]; then
 	cmake --build .
 else
   build_dir_name=$docker_context-$arch/$build_type
-  build_folder=$(pwd)/build/$build_dir_name
+  build_folder=$BUILD_DIR/$build_dir_name
   img_build_dir=/build
   img_name=img
   img_tag=$tag_num
@@ -115,6 +116,6 @@ fi
 
 
 
-echo "====== Copy $project_name into $install_folder ======="
+echo "====== Copy $PROJ_NAME into $install_folder ======="
 mkdir -p $install_folder
-cp $build_folder/$project_name $install_folder/$project_name
+cp $build_folder/$PROJ_NAME $install_folder/$PROJ_NAME
