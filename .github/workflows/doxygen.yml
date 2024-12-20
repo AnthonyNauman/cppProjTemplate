@@ -22,7 +22,7 @@ jobs:
           submodules: 'recursive'
 
       - name: Install Doxygen
-        run: apt update && apt -y upgrade && apt install -y --no-install-recommends doxygen doxygen-doc
+        run: apt install -y doxygen doxygen-doc
         shell: bash
 
       - name: Run Doxygen
