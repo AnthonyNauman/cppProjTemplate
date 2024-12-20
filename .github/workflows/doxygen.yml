@@ -47,4 +47,4 @@ jobs:
         
       - name: Deploy To Gihub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@4.0.5
