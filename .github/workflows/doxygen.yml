@@ -43,7 +43,7 @@ jobs:
           path: documentation/html
 
       - name: Setup Pages
-        uses: actions/configure-github-pages@v2
+        uses: actions/configure-pages@v2
         
       - name: Deploy To Gihub Pages
         id: deployment
