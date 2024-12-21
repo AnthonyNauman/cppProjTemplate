@@ -1,5 +1,5 @@
 
-FROM geosx/ubuntu20.04-gcc9:276-582 AS build
+FROM rockdreamer/ubuntu20-gcc10 AS build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USERNAME=user
@@ -11,15 +11,8 @@ RUN apt update \
     && apt -y upgrade \
     && apt -y autoremove \
     && apt -y autoclean \
-    && apt install -y --no-install-recommends clang-tidy mc \
-    gdb python pip doxygen doxygen-doc graphviz
-
-RUN pip install clang-format conan
-
-RUN apt-get update && \
-    apt-get install -y \
-    cmake
-
+    && apt install -y --no-install-recommends \
+    cmake clang-tidy mc gdb python python3-pip doxygen doxygen-doc graphviz vim
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -34,6 +27,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo 'export LC_ALL=ru_RU.UTF-8' > /home/$USERNAME/.bashrc   \
     && echo "export TERM=xterm-256color" >> /home/$USERNAME/.bashrc \
     && echo 'alias kj="kill -9 $(jobs -p)"' >> /home/$USERNAME/.bashrc
+
+
+RUN pip3 install clang-format
+RUN pip3 install conan==2.0 && conan profile detect --force
 
 
 # RUN mkdir /home/$USERNAME/vscode_builds/

@@ -9,15 +9,31 @@ PROJ_VERSION_BUILD=0
 PROJ_VERSION_PATCH=7
 PROJ_VERSION="$PROJ_VERSION_MAJOR.$PROJ_VERSION_MINOR.$PROJ_VERSION_BUILD.$PROJ_VERSION_PATCH"
 
-# === Project variables ===
+
+# === Build variables ===
+
+export CPP_STANDART=17
+export ARCH=x86_64
+export BUILD_TYPE=Release
+export COMPILER=gcc
+export COMPILER_VERSION=10
+export CPPSTD_PREFIX=gnu
 
 
-# ================================
+# === Dirs ===
+
 SCRIPTS_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
 PROJ_DIR="$(dirname "$SCRIPTS_DIR")"
-SOURCE_DIR=$PROJ_DIR/apps
+APPS_DIR=$PROJ_DIR/apps
+
+SOURCE_DIR=$APPS_DIR/$PROJ_NAME
 BUILD_DIR=$PROJ_DIR/build
+INSTALL_DIR=$PROJ_DIR/install
 DEV_OPS_DIR=$PROJ_DIR/devops
+
+# === Files ===
+
+CONAN_PROFILE=$PROJ_DIR/conanProfile
 
 # echo "=============="
 # echo "PROJ DIR: $PROJ_DIR"

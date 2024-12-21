@@ -9,6 +9,13 @@
 			"password": true
 		},
 		{
+			"id": "DockerPass",
+			"default": "user",
+			"type": "promptString",
+			"description": "Docker user password",
+			"password": true
+		},
+		{
 			"id": "BuildType",
 			"description": "Cmake project build type.",
 			"options": [
@@ -33,7 +40,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "C/C++: Build x86_64 in Docker",
+			"label": "[Docker] C/C++: Build x86_64",
 			"command": "./scripts/build.sh",
 			"args": [
 				"--arch=x86_64",
@@ -51,7 +58,7 @@
 		},
 		{
 			"type": "shell",
-			"label": "C/C++: Build armv7hf in Docker",
+			"label": "[Docker] C/C++: Build armv7hf",
 			"command": "./scripts/build.sh",
 			"args": [
 				"--arch=armv7hf",
@@ -69,10 +76,55 @@
 		},
 		{
 			"type": "shell",
-			"label": "C/C++: Build Local",
-			"command": "./scripts/build.sh",
+			"label": "[Docker] C/C++: Clear",
+			"command": "echo ${input:DockerPass} | sudo -S rm -rf build/docker",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiRed",
+				"id": "chrome-close"
+			}
+		},
+		// {
+		// 	"type": "shell",
+		// 	"label": "[Local] C/C++: Build",
+		// 	"command": "./scripts/build.sh",
+		// 	"args": [
+		// 		"--arch=x86_64",
+		// 		"--build-type=${input:BuildType}"
+		// 	],
+		// 	"group": {
+		// 		"kind": "build",
+		// 		"isDefault": true
+		// 	},
+		// 	"icon": {
+		// 		"color": "terminal.ansiBlue",
+		// 		"id": "circuit-board"
+		// 	}
+		// },
+		{
+			"type": "shell",
+			"label": "[Dev Container] C/C++: Conan Install",
+			"command": "./scripts/dev_container_conan_install.sh",
 			"args": [
-				"--arch=x86_64",
+				"--build-type=${input:BuildType}"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiBlue",
+				"id": "terminal-bash"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "[Dev Container] C/C++: Build",
+			"command": "./scripts/dev_container_build.sh",
+			"args": [
 				"--build-type=${input:BuildType}"
 			],
 			"group": {
@@ -86,12 +138,21 @@
 		},
 		{
 			"type": "shell",
+			"label": "[Dev Container] C/C++: Clear",
+			"command": "rm -rf build/dev_container",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiRed",
+				"id": "chrome-close"
+			}
+		},
+		{
+			"type": "shell",
 			"label": "Run: Target",
 			"command": "./install/${input:TargetName}",
-			// "args": [
-			// 	"--arch=x86_64",
-			// 	"--build-type=${input:BuildType}"
-			// ],
 			"group": {
 				"kind": "build",
 				"isDefault": true

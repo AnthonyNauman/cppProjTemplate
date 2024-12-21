@@ -26,10 +26,7 @@ EOF
 
 # === Script args === 
 
-export version=$PROJ_VERSION
-export arch=x86_64
 export use_docker=false
-export build_type=Release
 
 # === Script args === 
 
@@ -50,7 +47,7 @@ case "$1" in
 #     ;;
 -a|--arch) 
     shift
-    export arch="$1"
+    export ARCH="$1"
     ;;
 -d|--docker) 
     export use_docker=true
@@ -66,56 +63,79 @@ esac
 shift
 done
 
-# === Variables === 
-
-docker_context=gcc10
-compiler_version=10
+# === Docker Variables === 
 tag_num=2
-base_image_name=geosx/ubuntu20.04-gcc10:261-585
-project_source_path=$SOURCE_DIR/$PROJ_NAME
-install_folder=$(pwd)/install
-build_type_docker="$build_type"
+# base_image_name=geosx/ubuntu20.04-gcc10:261-585
+base_image_name=rockdreamer/ubuntu20-gcc10
 
-# === Variables === 
 
-if [ $arch == "x86_64" ]; then
-  docker_context=gcc10
-  compiler_version=10
-  tag_num=2
-  base_image_name=geosx/ubuntu20.04-gcc10:261-585
-elif [ $arch == "armv7hf" ]; then
-	docker_context=gcc10
-	compiler_version=10
-	tag_num=1
+
+if [ $ARCH == "x86_64" ]; then
+  COMPILER=gcc
+  COMPILER_VERSION=10
+  CPPSTD_PREFIX=gnu
+  tag_num=1
+  # base_image_name=geosx/ubuntu20.04-gcc10:261-585
+  base_image_name=rockdreamer/ubuntu20-gcc10
+elif [ $ARCH == "armv7hf" ]; then
+	COMPILER=gcc
+	COMPILER_VERSION=10
+  CPPSTD_PREFIX=gnu
+	tag_num=2
 	base_image_name=conanio/gcc10-armv7hf
-	arch="armv7hf"
 fi
 
 
+echo "================ $ARCH $BUILD_TYPE =================="
+compiler_cppstd=$CPPSTD_PREFIX$CPP_STANDART
 
-echo "================ $arch $build_type =================="
+# change conan profile
+sed -i "s|^arch*=.*|arch=$ARCH|" "$CONAN_PROFILE"
+sed -i "s|^build_type*=.*|build_type=$BUILD_TYPE|" "$CONAN_PROFILE"
+sed -i "s|^compiler*=.*|compiler=$COMPILER|" "$CONAN_PROFILE"
+sed -i "s|^compiler.version*=.*|compiler.version=$COMPILER_VERSION|" "$CONAN_PROFILE"
+sed -i "s|^compiler.cppstd*=.*|compiler.cppstd=$compiler_cppstd|" "$CONAN_PROFILE"
 
 if [ $use_docker == false ]; then
-  build_folder=$(pwd)/build/local/$build_type
+  build_folder=$BUILD_DIR/local/$BUILD_TYPE
+  conan_folder=$BUILD_DIR/local/conan
   mkdir -p $build_folder
+  mkdir -p $conan_folder
+
+  conan install $PROJ_DIR --output-folder=$conan_folder --profile=conanProfile --profile:build=conanProfile
+	# -s arch=x86_64 \
+	# -s build_type=Debug \
+	# -s compiler=gcc \
+	# -s compiler.cppstd=gnu17 \
+	# -s compiler.libcxx=libstdc++11 \
+	# -s compiler.version=10 \
+	# -s os=Linux \
+	
+
   cd $build_folder
-  cmake $project_source_path -DCMAKE_BUILD_TYPE=$build_type
+  cmake $SOURCE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE="$conan_folder/conan_toolchain.cmake"
 	cmake --build .
 else
-  build_dir_name=$docker_context-$arch/$build_type
+  build_dir_name=docker/$COMPILER$COMPILER_VERSION-$ARCH/$BUILD_TYPE
   build_folder=$BUILD_DIR/$build_dir_name
   img_build_dir=/build
   img_name=img
   img_tag=$tag_num
 
+  
+
+#   [buildenv]
+# CC=arm-linux-gnueabihf-gcc-10
+# CXX=arm-linux-gnueabihf-g++-10
+# LD=arm-linux-gnueabihf-ld
+
 
   mkdir -p $build_folder
-  docker build --build-arg BASE_IMAGE="$base_image_name" --build-arg BUILD_TYPE="$build_type_docker"  -t $img_name:$img_tag .
+  docker build --build-arg BASE_IMAGE="$base_image_name" --build-arg BUILD_TYPE="$BUILD_TYPE" --build-arg BUILD_FOLDER="$build_dir_name"  -t $img_name:$img_tag .
   docker run --rm -v $build_folder:$img_build_dir $img_name:$img_tag
 fi
 
 
-
-echo "====== Copy $PROJ_NAME into $install_folder ======="
-mkdir -p $install_folder
-cp $build_folder/$PROJ_NAME $install_folder/$PROJ_NAME
+echo "Copy \"$build_folder/$PROJ_NAME\" into \"$INSTALL_DIR\""
+mkdir -p $INSTALL_DIR
+cp $build_folder/$PROJ_NAME $INSTALL_DIR/$PROJ_NAME

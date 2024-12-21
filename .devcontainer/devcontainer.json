@@ -40,8 +40,9 @@
 		"vscode": {
 			"settings": {
 				// Paths
-				"cmake.buildDirectory": "/home/user/vscode_builds/${workspaceFolderBasename}",
-				"clang-format.executable": "/usr/local/bin/clang-format"
+				"cmake.buildDirectory": "/workspaces/${workspaceFolderBasename}/build/dev_container",
+				"cmake.cmakePath": "/usr/bin/cmake",
+				"clang-format.executable": "/usr/local/bin/clang-format",
 			},
 			"extensions": [
 				"ms-vscode.cpptools-extension-pack",
@@ -60,5 +61,7 @@
 	},
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	"remoteUser": "user",
-	"containerUser": "user"
+	"containerUser": "user",
+	// "postCreateCommand": "conan profile detect --force"
+	// && sudo mkdir -p /home/conan/data && sudo mkdir -p /home/conan/cache && echo 'core.cache:storage_path = /home/conan/data' > /home/user/.conan2/global.conf && echo 'core.download:download_cache = /home/conan/cache' >> /home/user/.conan2/global.conf
 }

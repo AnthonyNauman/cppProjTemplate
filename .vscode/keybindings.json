@@ -57,6 +57,11 @@
 		"command": "workbench.action.splitEditorDown"
 	},
 	// Cmake
+	// CMake: Configure
+	{
+		"key": "ctrl+f7",
+		"command": "cmake.selectBuildPreset"
+	},
 	{
 		"key": "shift+f7",
 		"command": "cmake.buildWithTarget",
@@ -67,14 +72,21 @@
 		"command": "cmake.build",
 		"when": "cmake:enableFullFeatureSet && !cmake:hideBuildCommand"
 	},
-	{
-		"key": "shift+f6",
-		"command": "cmake.outline.cleanConfigure"
-	},
+	// CMake: Clean
 	{
 		"key": "f6",
+		"command": "cmake.clean"
+	},
+	// CMake: Configure
+	{
+		"key": "f8",
 		"command": "cmake.configure"
 	},
+	{
+		"key": "ctrl+f8",
+		"command": "cmake.selectConfigurePreset"
+	},
+	// CMake: Launch
 	{
 		"key": "shift+f5",
 		"command": "cmake.debugTarget",
