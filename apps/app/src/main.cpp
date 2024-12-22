@@ -1,11 +1,8 @@
 #include <iostream>
+#include <optional>
 #include <string>
 
 #include "someClass.h"
-
-#include <nlohmann/json.hpp>
-
-#include <optional>
 
 std::optional<int> getValue(bool shouldReturn)
 {
@@ -26,8 +23,8 @@ int main()
         std::cout << "Значение отсутствует." << std::endl;
     }
 
-    const auto  json = nlohmann::json::parse("{}");
-    std::string str = "aaa";
+    SomeClass   sc;
+    std::string str = std::to_string(sc.sum(4, 11));
     std::cout << "Test App " << str << std::endl;
 
     return 0;

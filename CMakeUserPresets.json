@@ -1,0 +1,9 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/workspaces/cppProjTemplate/build/dev_container/conan/CMakePresets.json"
+    ]
+}

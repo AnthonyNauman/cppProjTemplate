@@ -1,5 +1,7 @@
 #include "someClass.h"
 
-someClass::someClass(/* args */) {}
+SomeClass::SomeClass(/* args */) {}
 
-someClass::~someClass() {}
+SomeClass::~SomeClass() {}
+
+int SomeClass::sum(int a, int b) { return a + b; }

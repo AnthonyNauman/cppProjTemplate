@@ -25,11 +25,12 @@ export CPPSTD_PREFIX=gnu
 SCRIPTS_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
 PROJ_DIR="$(dirname "$SCRIPTS_DIR")"
 APPS_DIR=$PROJ_DIR/apps
-
-SOURCE_DIR=$APPS_DIR/$PROJ_NAME
+TESTS_DIR=$PROJ_DIR/tests
+SOURCE_DIR=$PROJ_DIR #$APPS_DIR/$PROJ_NAME
 BUILD_DIR=$PROJ_DIR/build
 INSTALL_DIR=$PROJ_DIR/install
-DEV_OPS_DIR=$PROJ_DIR/devops
+TOOLS_DIR=$PROJ_DIR/tools
+UTILS_DIR=$PROJ_DIR/utils
 
 # === Files ===
 

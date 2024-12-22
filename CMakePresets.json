@@ -48,10 +48,6 @@
         {
             "name": "conan-release",
             "configurePreset": "conan-release"
-        },
-        {
-            "name": "conan-debug",
-            "configurePreset": "conan-debug"
         }
     ]
 }

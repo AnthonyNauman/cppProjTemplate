@@ -1,0 +1,4 @@
+{
+	"cmake.sourceDirectory": "/workspaces/cppProjTemplate",
+	"test.workingDirectory": "install/tests/app/someClassTester"
+}

@@ -96,6 +96,7 @@ sed -i "s|^compiler*=.*|compiler=$COMPILER|" "$CONAN_PROFILE"
 sed -i "s|^compiler.version*=.*|compiler.version=$COMPILER_VERSION|" "$CONAN_PROFILE"
 sed -i "s|^compiler.cppstd*=.*|compiler.cppstd=$compiler_cppstd|" "$CONAN_PROFILE"
 
+build_folder=$BUILD_DIR/local
 if [ $use_docker == false ]; then
   build_folder=$BUILD_DIR/local/$BUILD_TYPE
   conan_folder=$BUILD_DIR/local/conan
@@ -136,6 +137,50 @@ else
 fi
 
 
-echo "Copy \"$build_folder/$PROJ_NAME\" into \"$INSTALL_DIR\""
-mkdir -p $INSTALL_DIR
-cp $build_folder/$PROJ_NAME $INSTALL_DIR/$PROJ_NAME
+echo "================ Targets Install =================="
+rm -rf install/*
+
+collect_directories() {
+    local dir="$1"
+    local -n dir_array="$2"  # Используем ссылочный массив
+
+    for item in "$dir"/*; do
+        if [ -d "$item" ]; then
+            dir_array+=("$(basename "$item")")  # Добавляем имя папки в массив
+            # collect_directories "$item" dir_array  # Рекурсивный вызов для подкаталогов
+        fi
+    done
+}
+
+apps_directories=()
+tests_directories=()
+collect_directories "$build_folder/apps" apps_directories
+collect_directories "$build_folder/tests" tests_directories
+
+for dir in "${apps_directories[@]}"; do
+    mkdir -p $INSTALL_DIR/apps/$dir
+    echo "Install \"$dir\""
+    echo "Copy \"$build_folder/apps/$dir/$dir\" into \"$INSTALL_DIR/apps/$dir/$dir\""
+    cp $build_folder/apps/$dir/$dir $INSTALL_DIR/apps/$dir/$dir
+done
+
+for dir in "${tests_directories[@]}"; do
+    directories=()
+    collect_directories "$build_folder/tests/$dir" directories
+    for subDir in "${directories[@]}"; do
+        mkdir -p $INSTALL_DIR/tests/$dir/$subDir
+        echo "Install \"$subDir\""
+        echo "Copy \"$build_folder/tests/$dir/$subDir/$subDir\" into \"$INSTALL_DIR/tests/$dir/$subDir/$subDir\""
+        cp $build_folder/tests/$dir/$subDir/$subDir $INSTALL_DIR/tests/$dir/$subDir/$subDir
+    done
+done
+
+mkdir -p $UTILS_DIR/run
+output_file="$UTILS_DIR/run/options"
+> "$output_file" 
+
+search_dir="$INSTALL_DIR/apps"
+find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+
+search_dir="$INSTALL_DIR/tests"
+find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +

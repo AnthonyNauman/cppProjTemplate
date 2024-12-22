@@ -29,12 +29,31 @@
 		},
 		{
 			"id": "TargetName",
-			"description": "Build target name",
-			"options": [
-				"app"
-			],
-			"type": "pickString",
-			"default": "app"
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args": {
+				"command": "cat ${workspaceFolder}/utils/run/options | grep apps",
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"WORKSPACE": "${workspaceFolder[0]}",
+					"FILE": "${file}",
+					"PROJECT": "${workspaceFolderBasename}"
+				}
+			}
+		},
+		{
+			"id": "TestName",
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args": {
+				"command": "cat ${workspaceFolder}/utils/run/options | grep tests",
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"WORKSPACE": "${workspaceFolder[0]}",
+					"FILE": "${file}",
+					"PROJECT": "${workspaceFolderBasename}"
+				}
+			}
 		}
 	],
 	"tasks": [
@@ -150,31 +169,33 @@
 			}
 		},
 		{
-			"type": "shell",
 			"label": "Run: Target",
-			"command": "./install/${input:TargetName}",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"icon": {
-				"color": "terminal.ansiGreen",
-				"id": "debug-start"
-			}
-		},
-		{
 			"type": "shell",
-			"label": "Run: App",
-			"command": "./scripts/run.sh",
-			"group": {
-				"kind": "test",
-				"isDefault": true
-			},
+			"command": "${workspaceFolder}/scripts/run.sh",
+			"args": [
+				"${input:TargetName}"
+			],
+			"problemMatcher": [],
 			"icon": {
 				"color": "terminal.ansiGreen",
 				"id": "debug-start"
 			}
 		},
+
+		{
+			"label": "Run: Test",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/run.sh",
+			"args": [
+				"${input:TestName}"
+			],
+			"problemMatcher": [],
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "debug-start"
+			}
+		},
+		// =================================
 		{
 			"type": "shell",
 			"label": "Utils: Docs generating",

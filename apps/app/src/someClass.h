@@ -1,13 +1,18 @@
 #pragma once
 
 //! \brief someClass descriptionsssss
-class someClass
+class SomeClass
 {
 private:
     //* data of class
     int _data;
 
 public:
-    someClass(/* args */);
-    ~someClass();
+    SomeClass(/* args */);
+    ~SomeClass();
+
+    //! \brief Sum of two numbers
+    //! \param a First
+    //! \param b Second
+    int sum(int a, int b);
 };

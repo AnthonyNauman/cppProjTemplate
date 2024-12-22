@@ -55,7 +55,9 @@
 				"huybui663.bookmarksh",
 				"amiralizadeh9480.cpp-helper",
 				"ms-azuretools.vscode-docker",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"augustocdias.tasks-shell-input",
+				"matepek.vscode-catch2-test-adapter"
 			]
 		}
 	},

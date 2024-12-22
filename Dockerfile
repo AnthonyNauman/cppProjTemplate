@@ -31,8 +31,11 @@ RUN conan install ../tmp \
 	# -s compiler.libcxx=libstdc++11 \
 	# -s compiler.version=10 \
 	# -s os=Linux \
-	--output-folder=../tmp/${BUILD_FOLDER}/conan --profile=../tmp/conanProfile --profile:build=../tmp/conanProfile
+	--output-folder=../tmp/${BUILD_FOLDER}/conan \
+	--profile=../tmp/conanProfile \
+	--profile:build=../tmp/conanProfile \
+	--build=missing
 
-RUN  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_TOOLCHAIN_FILE="../tmp/${BUILD_FOLDER}/conan/conan_toolchain.cmake" ../tmp/apps/app && cmake --build .
+RUN  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_TOOLCHAIN_FILE="../tmp/${BUILD_FOLDER}/conan/conan_toolchain.cmake" ../tmp && cmake --build .
 
 CMD [ "cp", "-r", "-u", "./", "/build"]

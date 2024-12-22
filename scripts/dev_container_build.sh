@@ -62,7 +62,7 @@ sed -i "s|^compiler.version*=.*|compiler.version=$COMPILER_VERSION|" "$tmp_conan
 sed -i "s|^compiler.cppstd*=.*|compiler.cppstd=$COMPILER_CPPSTD|" "$tmp_conan_profile"
 
 mkdir -p $CONAN_BUILD_DIR
-conan install $PROJ_DIR --output-folder=$CONAN_BUILD_DIR --profile=conanTmpProfile --profile:build=conanTmpProfile
+conan install $PROJ_DIR --output-folder=$CONAN_BUILD_DIR --profile=conanTmpProfile --profile:build=conanTmpProfile --build=missing
 rm $tmp_conan_profile
 
 echo "================ Build: $ARCH $BUILD_TYPE =================="
@@ -72,6 +72,58 @@ cd $DEV_CONT_BUILD_DIR
 cmake $SOURCE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE="$CONAN_BUILD_DIR/conan_toolchain.cmake"
 cmake --build .
 
-echo "Copy \"$build_folder/$PROJ_NAME\" into \"$INSTALL_DIR\""
+
+echo "================ Targets Install =================="
+rm -rf $INSTALL_DIR
+
 mkdir -p $INSTALL_DIR
-cp $DEV_CONT_BUILD_DIR/$PROJ_NAME $INSTALL_DIR/$PROJ_NAME
+
+collect_directories() {
+    local dir="$1"
+    local -n dir_array="$2"  # Используем ссылочный массив
+
+    for item in "$dir"/*; do
+        if [ -d "$item" ]; then
+            dir_array+=("$(basename "$item")")  # Добавляем имя папки в массив
+            # collect_directories "$item" dir_array  # Рекурсивный вызов для подкаталогов
+        fi
+    done
+}
+
+apps_directories=()
+tests_directories=()
+collect_directories "$DEV_CONT_BUILD_DIR/apps" apps_directories
+collect_directories "$DEV_CONT_BUILD_DIR/tests" tests_directories
+
+for dir in "${apps_directories[@]}"; do
+    mkdir -p $INSTALL_DIR/apps/$dir
+    echo "Install \"$dir\""
+    echo "Copy \"$DEV_CONT_BUILD_DIR/apps/$dir/$dir\" into \"$INSTALL_DIR/apps/$dir/$dir\""
+    cp $DEV_CONT_BUILD_DIR/apps/$dir/$dir $INSTALL_DIR/apps/$dir/$dir
+done
+
+for dir in "${tests_directories[@]}"; do
+    directories=()
+    collect_directories "$DEV_CONT_BUILD_DIR/tests/$dir" directories
+    for subDir in "${directories[@]}"; do
+        mkdir -p $INSTALL_DIR/tests/$dir/$subDir
+        echo "Install \"$subDir\""
+        echo "Copy \"$DEV_CONT_BUILD_DIR/tests/$dir/$subDir/$subDir\" into \"$INSTALL_DIR/tests/$dir/$subDir/$subDir\""
+        cp $DEV_CONT_BUILD_DIR/tests/$dir/$subDir/$subDir $INSTALL_DIR/tests/$dir/$subDir/$subDir
+    done
+done
+
+
+
+mkdir -p $UTILS_DIR/run
+output_file="$UTILS_DIR/run/options"
+> "$output_file" 
+
+search_dir="$INSTALL_DIR/apps"
+find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+
+search_dir="$INSTALL_DIR/tests"
+find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+
+
+

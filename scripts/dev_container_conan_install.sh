@@ -62,5 +62,5 @@ sed -i "s|^compiler.version*=.*|compiler.version=$COMPILER_VERSION|" "$tmp_conan
 sed -i "s|^compiler.cppstd*=.*|compiler.cppstd=$COMPILER_CPPSTD|" "$tmp_conan_profile"
 
 mkdir -p $CONAN_BUILD_DIR
-conan install $PROJ_DIR --output-folder=$CONAN_BUILD_DIR --profile=conanTmpProfile --profile:build=conanTmpProfile
+conan install $PROJ_DIR --output-folder=$CONAN_BUILD_DIR --profile=conanTmpProfile --profile:build=conanTmpProfile --build=missing
 rm $tmp_conan_profile
