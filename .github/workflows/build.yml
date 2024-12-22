@@ -50,8 +50,7 @@ jobs:
       - name: Run Tests
         run: |
           ls -lh
-          chmod +x scripts/run_all_tests.sh
-          scripts/run_all_tests.sh
+          find "$tests/" -type f -exec chmod +x {} \; -exec {} \;
 
 
 
