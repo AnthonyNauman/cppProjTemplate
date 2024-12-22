@@ -54,7 +54,7 @@ jobs:
           find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} --gtest_output=xml:utils/test_results/xunit.xml \;
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
         if: always()
         with:
           files: |
