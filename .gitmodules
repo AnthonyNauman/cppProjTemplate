@@ -1,6 +1,6 @@
 [submodule "devops/docs/doxygenFlatTheme"]
-	path = devops/docs/doxygenFlatTheme
+	path = tools/docs/doxygenFlatTheme
 	url = git@github.com:AnthonyNauman/Doxygen-Flat-Theme.git
 [submodule "devops/docs/doxygenDarkTheme"]
-	path = devops/docs/doxygenDarkTheme
+	path = tools/docs/doxygenDarkTheme
 	url = git@github.com:AnthonyNauman/Doxygen-Dark-Theme.git
