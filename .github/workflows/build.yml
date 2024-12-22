@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Check Installed Software
         run: |
-          echo "Completed job 2, but triggering failure"
+          scripts/run_all_tests.sh
         shell: bash
 
 

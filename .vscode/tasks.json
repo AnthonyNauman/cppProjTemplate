@@ -169,7 +169,7 @@
 			}
 		},
 		{
-			"label": "Run: Target",
+			"label": "[Dev Container] Run: Target",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/run.sh",
 			"args": [
@@ -183,12 +183,22 @@
 		},
 
 		{
-			"label": "Run: Test",
+			"label": "[Dev Container] Run: Test",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/run.sh",
 			"args": [
 				"${input:TestName}"
 			],
+			"problemMatcher": [],
+			"icon": {
+				"color": "terminal.ansiGreen",
+				"id": "debug-start"
+			}
+		},
+		{
+			"label": "Run: All Tests",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/run_all_tests.sh",
 			"problemMatcher": [],
 			"icon": {
 				"color": "terminal.ansiGreen",
