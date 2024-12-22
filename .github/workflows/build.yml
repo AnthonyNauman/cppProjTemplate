@@ -50,7 +50,15 @@ jobs:
 
       - name: Run Tests
         run: |
-          find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} \;
+          mkdir -p utils/test_results
+          find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} --gtest_output=xml:utils/test_results/xunit.xml \;
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/macos@v2
+        if: always()
+        with:
+          files: |
+            utils/test-results/*.xml
 
 
 
