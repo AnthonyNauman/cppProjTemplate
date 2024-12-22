@@ -49,6 +49,7 @@ jobs:
 
       - name: Run Tests
         run: |
+          unzip artifacts.zip
           chmod +x scripts/run_all_tests.sh
           scripts/run_all_tests.sh
 
