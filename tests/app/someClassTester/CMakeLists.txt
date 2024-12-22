@@ -7,7 +7,7 @@ project(someClassTester)
 
 find_package(GTest REQUIRED)
 
-set(TESTED_SOURCE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../apps/app/src)
+set(TESTED_SOURCE_FOLDER ${CMAKE_SOURCE_DIR}/apps/app/src)
 
 set(TESTED_SOURCES 
 	${TESTED_SOURCE_FOLDER}/someClass.h

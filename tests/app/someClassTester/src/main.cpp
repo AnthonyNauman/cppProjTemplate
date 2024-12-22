@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-
 #include <someClass.h>
 
 TEST(Test, unitTestName1)
