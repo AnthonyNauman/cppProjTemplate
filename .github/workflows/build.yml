@@ -50,8 +50,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          ls -lh
-          cd artifacts && ls -lh
           find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} \;
 
 
