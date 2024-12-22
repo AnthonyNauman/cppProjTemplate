@@ -46,11 +46,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifacts
+          path: artifacts/
 
       - name: Run Tests
         run: |
           ls -lh
-          find "$tests/" -type f -exec chmod +x {} \; -exec {} \;
+          cd artifacts && ls -lh
+          find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} \;
 
 
 
