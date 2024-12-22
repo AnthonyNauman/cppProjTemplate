@@ -27,14 +27,34 @@ jobs:
       - name: Run Build
         run: scripts/build.sh --arch=x86_64 --docker --build-type=Release
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: install
+          path: ./install
+        uses: actions/upload-artifact@v4
+        with:
+          name: scripts
+          path: ./scripts
+
   tests:
     needs: build
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Check Installed Software
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: install
+          path: ./install
+        uses: actions/download-artifact@v4
+        with:
+          name: scripts
+          path: ./scripts
+
+      - name: Run Tests
         run: |
-          scripts/run_all_tests.sh
+          ./scripts/run_all_tests.sh
         shell: bash
 
 
