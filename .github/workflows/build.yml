@@ -33,7 +33,6 @@ jobs:
           name: artifacts
           path: |
             install/
-            utils/
 
   tests:
     needs: build
