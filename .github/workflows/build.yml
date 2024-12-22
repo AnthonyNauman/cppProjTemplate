@@ -27,15 +27,15 @@ jobs:
       - name: Run Build
         run: scripts/build.sh --arch=x86_64 --docker --build-type=Release
 
+      - name: Collecting All Artifacts
+        run: mkdir artifacts && cp -r ./install artifacts/install && cp -r ./scripts artifacts/scripts
+
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: install
-          path: ./install
-        uses: actions/upload-artifact@v4
-        with:
-          name: scripts
-          path: ./scripts
+          name: artifacts
+          path: ./artifacts
 
   tests:
     needs: build
@@ -45,16 +45,12 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: install
-          path: ./install
-        uses: actions/download-artifact@v4
-        with:
-          name: scripts
-          path: ./scripts
+          name: artifacts
+          path: ./artifacts
 
       - name: Run Tests
         run: |
-          ./scripts/run_all_tests.sh
+          ./artifacts/scripts/run_all_tests.sh
         shell: bash
 
 
