@@ -27,31 +27,31 @@ jobs:
       - name: Run Build
         run: scripts/build.sh --arch=x86_64 --docker --build-type=Release
 
-      - name: Collecting All Artifacts
-        run: mkdir artifacts && cp -r ./install artifacts/install && cp -r ./scripts artifacts/scripts
-
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: artifacts
-          path: ./artifacts
+          path: |
+            install/
+            scripts/
 
   tests:
     needs: build
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Clone Project
+        uses: actions/checkout@v2
+
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           name: artifacts
-          path: ./artifacts
 
       - name: Run Tests
         run: |
-          ./artifacts/scripts/run_all_tests.sh
-        shell: bash
+          chmod +x scripts/run_tests.sh
+          ./scripts/run_all_tests.sh
 
 
 
