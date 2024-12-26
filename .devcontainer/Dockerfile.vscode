@@ -12,7 +12,7 @@ RUN apt update \
     && apt -y autoremove \
     && apt -y autoclean \
     && apt install -y --no-install-recommends \
-    cmake clang-tidy mc gdb python python3-pip doxygen doxygen-doc graphviz vim
+    cmake clang-tidy mc gdb python python3-pip doxygen doxygen-doc graphviz vim lcov
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \

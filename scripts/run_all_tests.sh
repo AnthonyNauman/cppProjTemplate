@@ -1,12 +1,19 @@
 #!/bin/bash
 source $(dirname $0)/project_info.sh
 
+cov_folder=$ARTIFACTS_DIR/coverage
+report_folder=$ARTIFACTS_DIR/test_report
+cov_info_folder=$report_folder/coverage_info
 
-# Папка, которую нужно просмотреть
+rm -rf $report_folder
+rm -rf $cov_info_folder
+mkdir -p $report_folder $cov_info_folder
+
+main_cov_info_file=$report_folder/main_coverage.info
+
 directory="$INSTALL_DIR/tests"
+run_tests_with_report "$directory"
 
-report_folder="$UTILS_DIR/test_results"
-mkdir -p $report_folder
-
-# Рекурсивный поиск исполняемых файлов и их запуск
-find "$directory" -type f -exec chmod +x {} \; -exec {} --gtest_output=xml:$report_folder/xunit.xml \;
+# Test coverage
+lcov -c -d $cov_folder -o $main_cov_info_file
+genhtml $main_cov_info_file --output-directory $cov_info_folder

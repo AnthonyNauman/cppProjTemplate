@@ -18,30 +18,14 @@
                 "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
                 "CMAKE_BUILD_TYPE": "Release"
             },
-            "toolchainFile": "/workspaces/cppProjTemplate/build/dev_container/conan/conan_toolchain.cmake",
-            "binaryDir": "/workspaces/cppProjTemplate/build/dev_container/Release"
-        },
-        {
-            "name": "conan-debug",
-            "displayName": "'conan-debug' config",
-            "description": "'conan-debug' configure using 'Unix Makefiles' generator",
-            "generator": "Unix Makefiles",
-            "cacheVariables": {
-                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "toolchainFile": "/workspaces/cppProjTemplate/build/dev_container/conan/conan_toolchain.cmake",
-            "binaryDir": "/workspaces/cppProjTemplate/build/dev_container/Debug"
+            "toolchainFile": "/workspaces/cppProjTemplate/conan_toolchain.cmake",
+            "binaryDir": "/workspaces/cppProjTemplate"
         }
     ],
     "buildPresets": [
         {
             "name": "conan-release",
             "configurePreset": "conan-release"
-        },
-        {
-            "name": "conan-debug",
-            "configurePreset": "conan-debug"
         }
     ],
     "testPresets": [

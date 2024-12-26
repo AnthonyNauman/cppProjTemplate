@@ -4,7 +4,8 @@ source $(dirname $0)/project_info.sh
 
 DOCS_DIR=$PROJ_DIR/documentation
 DOXYFILE=$DOCS_DIR/Doxyfile
-DOXYGEN_FLAT_SRC=devops/docs/doxygenFlatTheme/src
+DOXYGEN_FLAT_SRC=$TOOLS_DIR/docs/doxygenFlatTheme/src
+DOXYGEN_DARK_SRC=$TOOLS_DIR/docs/doxygenDarkTheme
 
 rm $DOXYFILE
 rm $DOCS_DIR
@@ -29,18 +30,18 @@ RECURSIVE="YES"
 GENERATE_HTML="YES"
 GENERATE_LATEX="NO"
 USE_MDFILE_AS_MAINPAGE="README.md"
-HTML_EXTRA_STYLESHEET="devops/docs/doxygenFlatTheme/src/doxygen-style.css"
+HTML_EXTRA_STYLESHEET="$DOXYGEN_FLAT_SRC/doxygen-style.css"
 # HTML_EXTRA_STYLESHEET="devops/docs/doxygenDarkTheme/custom_dark_theme.css"
 # HTML_EXTRA_STYLESHEET+=" devops/docs/doxygenDarkTheme/custom.css"
-HTML_FOOTER="devops/docs/doxygenDarkTheme/html_footer.html"
-HTML_HEADER="devops/docs/doxygenDarkTheme/html_header.html"
+HTML_FOOTER="$DOXYGEN_DARK_SRC/html_footer.html"
+HTML_HEADER="$DOXYGEN_DARK_SRC/html_header.html"
 
-HTML_EXTRA_FILES="devops/docs/doxygenFlatTheme/src/img/closed-folder.png "
-HTML_EXTRA_FILES+=" devops/docs/doxygenFlatTheme/src/img/closed-folder.png"
-HTML_EXTRA_FILES+=" devops/docs/doxygenFlatTheme/src/img/document.png"
-HTML_EXTRA_FILES+=" devops/docs/doxygenFlatTheme/src/img/off_sync.png"
-HTML_EXTRA_FILES+=" devops/docs/doxygenFlatTheme/src/img/on_sync.png"
-HTML_EXTRA_FILES+=" devops/docs/doxygenFlatTheme/src/img/opened-folder.png"
+HTML_EXTRA_FILES="$DOXYGEN_FLAT_SRC/img/closed-folder.png "
+HTML_EXTRA_FILES+=" $DOXYGEN_FLAT_SRC/img/closed-folder.png"
+HTML_EXTRA_FILES+=" $DOXYGEN_FLAT_SRC/img/document.png"
+HTML_EXTRA_FILES+=" $DOXYGEN_FLAT_SRC/img/off_sync.png"
+HTML_EXTRA_FILES+=" $DOXYGEN_FLAT_SRC/img/on_sync.png"
+HTML_EXTRA_FILES+=" $DOXYGEN_FLAT_SRC/img/opened-folder.png"
 
 # Change default values in Doxyfile
 sed -i "s/^PROJECT_NAME *=.*/PROJECT_NAME = $PROJECT_NAME/" "$DOXYFILE"

@@ -6,14 +6,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 project(App)
 
 
-option(BUILD_TEST_TOOLS "Build test tools" ON)
+#option(BUILD_TESTS "Build test tools" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(BUILD_APPS)
+    add_subdirectory(apps/app)
+endif()
 
-add_subdirectory(apps/app)
-if (BUILD_TEST_TOOLS)
+if (BUILD_TESTS)
     add_subdirectory(tests/app/someClassTester)
 endif()
 

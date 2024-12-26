@@ -4,6 +4,6 @@
         "conan": {}
     },
     "include": [
-        "/workspaces/cppProjTemplate/build/dev_container/conan/CMakePresets.json"
+        "/workspaces/cppProjTemplate/build/conan/CMakePresets.json"
     ]
 }

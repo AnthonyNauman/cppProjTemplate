@@ -14,5 +14,6 @@ public:
     //! \brief Sum of two numbers
     //! \param a First
     //! \param b Second
-    int sum(int a, int b);
+    int  sum(int a, int b);
+    bool isEqual(int a, int b);
 };

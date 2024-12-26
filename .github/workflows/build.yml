@@ -25,40 +25,54 @@ jobs:
           submodules: 'recursive'
 
       - name: Run Build
-        run: scripts/build.sh --arch=x86_64 --docker --build-type=Release
+        run: scripts/build.sh --arch=x86_64 --docker --build-type=Release --build-targets=Apps
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: |
-            install/
+            artifacts/
 
   tests:
     needs: build
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Install Software
+        run: apt-get install -y lcov
+        shell: bash
+
       - name: Clone Project
         uses: actions/checkout@v2
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
         with:
-          name: artifacts
-          path: artifacts/
+          submodules: 'recursive'
+
+      # - name: Download Artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: artifacts
+      #     path: artifacts/
+
+      - name: Run Build
+        run: scripts/build.sh --arch=x86_64 --docker --build-type=Release --build-targets=Tests
 
       - name: Run Tests
-        run: |
-          mkdir /tmp/test_results
-          find "artifacts/tests/" -type f -exec chmod +x {} \; -exec {} --gtest_output=xml:/tmp/test_results/xunit.xml \;
+        run: scripts/run_all_tests.sh
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/linux@v2
-        if: always()
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: |
-            /tmp/test_results/*.xml
+          name: test_artifacts
+          path: |
+            artifacts/test_report
+
+      # - name: Publish Test Results
+      #   uses: EnricoMi/publish-unit-test-result-action/linux@v2
+      #   if: always()
+      #   with:
+      #     files: |
+      #       /tmp/test_results/*.xml
 
 
 

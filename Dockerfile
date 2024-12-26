@@ -1,41 +1,40 @@
-ARG BASE_IMAGE=geosx/ubuntu20.04-gcc10:261-585
 ARG DEBIAN_FRONTEND=noninteractive
 
 
-FROM ${BASE_IMAGE} AS build
+FROM rockdreamer/ubuntu20-gcc10 AS build
 
 ARG BUILD_TYPE=Release
 ARG BUILD_FOLDER=build
+ARG BUILD_TESTS=OFF
+ARG BUILD_APPS=ON
+ARG ARCH=x86_64
+ARG CONAN_FILE_NAME=conanProfile
+
+
+
+ARG CONAN_FOLDER=/tmp/${BUILD_FOLDER}/conan
+ARG CONAN_FILE_PATH=/tmp/${CONAN_FILE_NAME}
 
 USER root
 
 RUN apt-get update && \
 	apt-get install -y \
-	cmake apt-utils python pip
-
-# RUN python -m pip install --upgrade pip
+	cmake apt-utils python pip lcov
 
 RUN pip install conan==2.0 && conan profile detect --force
-#&& conan profile detect --force
-
 
 ADD ./ /tmp
 
-WORKDIR /build_tmp
+WORKDIR /build_tmp/${BUILD_TYPE}
 
-RUN conan install ../tmp \
-	# -s arch=x86_64 \
-	# -s build_type=Debug \
-	# -s compiler=gcc \
-	# -s compiler.cppstd=gnu17 \
-	# -s compiler.libcxx=libstdc++11 \
-	# -s compiler.version=10 \
-	# -s os=Linux \
-	--output-folder=../tmp/${BUILD_FOLDER}/conan \
-	--profile=../tmp/conanProfile \
-	--profile:build=../tmp/conanProfile \
+RUN conan install /tmp \
+	--output-folder=${CONAN_FOLDER} \
+	--profile=${CONAN_FILE_PATH} \
+	--profile:build=${CONAN_FILE_PATH} \
 	--build=missing
 
-RUN  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_TOOLCHAIN_FILE="../tmp/${BUILD_FOLDER}/conan/conan_toolchain.cmake" ../tmp && cmake --build .
+RUN  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=${BUILD_TESTS} -DBUILD_APPS=${BUILD_APPS} -DCMAKE_TOOLCHAIN_FILE="/tmp/${BUILD_FOLDER}/conan/conan_toolchain.cmake" /tmp \
+	&& cmake --build . 
+
 
 CMD [ "cp", "-r", "-u", "./", "/build"]

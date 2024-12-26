@@ -10,27 +10,24 @@ Usage: ./build.sh -v <version> -t <build-type> [-hd]
 Available options:
 
 -h, -help,          --help                  Display help
--a, -arch,          --arch                  Architecture [ x86_64 | armv7hf ]. (Default: x86_64)
--d, -docker,        --docker                Build and run in docker container.
 -t, -build-type,    --build-type            Build type [ Release | Debug | RelWithDebInfo | MinSizeRel ]. (Default: Release)
+-t, -build-targets, --build-targets         Build targets [ Apps | Tests | All ]. (Default: Apps)
+-d, -docker,        --docker                Build and run in docker container.
+-a, -arch,          --arch                  Architecture [ x86_64 | armv7hf ]. (Default: x86_64)
 
 ----------------------------------
 Calling build.sh script without parameters will run the script with defaults:
 
---arch=x86_64
 --build-type=Release
+--build-targets=Apps
+--arch=x86_64
 
 EOF
 }
-# -v, -version,       --version               Project version.
 
 # === Script args === 
 
-export use_docker=false
-
-# === Script args === 
-
-options=$(getopt -l "help,arch:,docker,build-type:" -o "hv:a:dt:" -a -- "$@") #,version:
+options=$(getopt -l "help,build-type:,build-targets:,docker,arch:" -o "hb:t:da:" -a -- "$@")
 
 eval set -- "$options"
 
@@ -41,20 +38,32 @@ case "$1" in
     showHelp
     exit 0
     ;;
-# -v|--version) 
-#     shift
-#     export version="$1"
-#     ;;
+-b|--build-type) 
+    shift
+    export BUILD_TYPE="$1"
+    ;;
+-t|--build-targets) 
+    shift
+    export BUILD_TARGS="$1"
+    if [ $BUILD_TARGS = "Tests" ] ; then
+        export USE_CONAN=true
+        export BUILD_TESTS="ON"
+        export BUILD_APPS="OFF"
+    elif [ $BUILD_TARGS = "All" ] ; then
+        export USE_CONAN=true
+        export BUILD_TESTS="ON"
+        export BUILD_APPS="ON"
+    elif [ $BUILD_TARGS = "Apps" ] ; then
+        export BUILD_TESTS="OFF"
+        export BUILD_APPS="ON"
+    fi
+    ;;
+-d|--docker) 
+    export USE_DOCKER=true
+    ;;
 -a|--arch) 
     shift
     export ARCH="$1"
-    ;;
--d|--docker) 
-    export use_docker=true
-    ;;
--t|--build-type) 
-    shift
-    export build_type="$1"
     ;;
 --)
     shift
@@ -63,124 +72,113 @@ esac
 shift
 done
 
-# === Docker Variables === 
-tag_num=2
-# base_image_name=geosx/ubuntu20.04-gcc10:261-585
-base_image_name=rockdreamer/ubuntu20-gcc10
+if [ $USE_DOCKER == true ]; then
+
+    if [ $ARCH == "x86_64" ]; then
+        tag_num=1
+        DOCKER_FILE=$PROJ_DIR/Dockerfile
+        CONAN_PROFILE=conanProfile
+    elif [ $ARCH == "armv7hf" ]; then
+        tag_num=2
+        DOCKER_FILE=$PROJ_DIR/Dockerfile_armv7hf
+        CONAN_PROFILE=conanProfile_armv7hf
+    fi
 
 
+    build_dir_name=build-$COMPILER$COMPILER_VERSION-$ARCH
+    img_build_dir=/build
+    img_name=img
+    img_tag=$tag_num
+    volume_folder=$BUILD_DIR-$COMPILER$COMPILER_VERSION-$ARCH
 
-if [ $ARCH == "x86_64" ]; then
-  COMPILER=gcc
-  COMPILER_VERSION=10
-  CPPSTD_PREFIX=gnu
-  tag_num=1
-  # base_image_name=geosx/ubuntu20.04-gcc10:261-585
-  base_image_name=rockdreamer/ubuntu20-gcc10
-elif [ $ARCH == "armv7hf" ]; then
-	COMPILER=gcc
-	COMPILER_VERSION=10
-  CPPSTD_PREFIX=gnu
-	tag_num=2
-	base_image_name=conanio/gcc10-armv7hf
+    mkdir -p $volume_folder
+
+    docker build --build-arg BUILD_TYPE="$BUILD_TYPE" --build-arg BUILD_FOLDER="$build_dir_name" --build-arg BUILD_TESTS="$BUILD_TESTS" --build-arg CONAN_FILE_NAME="$CONAN_PROFILE" --build-arg BUILD_TESTS="$BUILD_APPS" -t $img_name:$img_tag -f $DOCKER_FILE $PROJ_DIR
+    
+    docker run --rm -v $volume_folder:$img_build_dir $img_name:$img_tag
+
+    exit 0
 fi
 
 
-echo "================ $ARCH $BUILD_TYPE =================="
-compiler_cppstd=$CPPSTD_PREFIX$CPP_STANDART
+if [ $USE_CONAN = true ] ; then
+    CONAN_PROFILE=$PROJ_DIR/conanProfile
+    conan_install $ARCH $BUILD_TYPE $CONAN_PROFILE $PROJ_DIR $CONAN_BUILD_DIR
+fi
 
-# change conan profile
-sed -i "s|^arch*=.*|arch=$ARCH|" "$CONAN_PROFILE"
-sed -i "s|^build_type*=.*|build_type=$BUILD_TYPE|" "$CONAN_PROFILE"
-sed -i "s|^compiler*=.*|compiler=$COMPILER|" "$CONAN_PROFILE"
-sed -i "s|^compiler.version*=.*|compiler.version=$COMPILER_VERSION|" "$CONAN_PROFILE"
-sed -i "s|^compiler.cppstd*=.*|compiler.cppstd=$compiler_cppstd|" "$CONAN_PROFILE"
+mkdir -p $PROJ_BUILD_DIR 
+cd $PROJ_BUILD_DIR
 
-build_folder=$BUILD_DIR/local
-if [ $use_docker == false ]; then
-  build_folder=$BUILD_DIR/local/$BUILD_TYPE
-  conan_folder=$BUILD_DIR/local/conan
-  mkdir -p $build_folder
-  mkdir -p $conan_folder
-
-  conan install $PROJ_DIR --output-folder=$conan_folder --profile=conanProfile --profile:build=conanProfile
-	# -s arch=x86_64 \
-	# -s build_type=Debug \
-	# -s compiler=gcc \
-	# -s compiler.cppstd=gnu17 \
-	# -s compiler.libcxx=libstdc++11 \
-	# -s compiler.version=10 \
-	# -s os=Linux \
-	
-
-  cd $build_folder
-  cmake $SOURCE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE="$conan_folder/conan_toolchain.cmake"
-	cmake --build .
+if [ $USE_CONAN = true ] ; then
+    cmake $SOURCE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_TESTS=$BUILD_TESTS -DBUILD_APPS=$BUILD_APPS -DCMAKE_TOOLCHAIN_FILE="$CONAN_TOOLCHAIN"
 else
-  build_dir_name=docker/$COMPILER$COMPILER_VERSION-$ARCH/$BUILD_TYPE
-  build_folder=$BUILD_DIR/$build_dir_name
-  img_build_dir=/build
-  img_name=img
-  img_tag=$tag_num
+    cmake $SOURCE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_TESTS=$BUILD_TESTS -DBUILD_APPS=$BUILD_APPS
+fi
 
-  
-
-#   [buildenv]
-# CC=arm-linux-gnueabihf-gcc-10
-# CXX=arm-linux-gnueabihf-g++-10
-# LD=arm-linux-gnueabihf-ld
+# Cmake build app
+cmake --build . 
 
 
-  mkdir -p $build_folder
-  docker build --build-arg BASE_IMAGE="$base_image_name" --build-arg BUILD_TYPE="$BUILD_TYPE" --build-arg BUILD_FOLDER="$build_dir_name"  -t $img_name:$img_tag .
-  docker run --rm -v $build_folder:$img_build_dir $img_name:$img_tag
+# [Optional] Save apps targets and tests to file for vscode tasks
+if [ $USE_VSCODE = true ] ; then
+    mkdir -p $VSCODE_DIR/run
+    output_file="$VSCODE_DIR/run/options"
+    > "$output_file"
 fi
 
 
-echo "================ Targets Install =================="
-rm -rf install/*
+if [ $BUILD_APPS = "ON" ] ; then
+    echo "================ $PROJ_NAME Install =================="
 
-collect_directories() {
-    local dir="$1"
-    local -n dir_array="$2"  # Используем ссылочный массив
+    # [Optional] Copy target to install dir
+    apps_directories=()
+    collect_directories "$PROJ_BUILD_DIR/apps" apps_directories
 
-    for item in "$dir"/*; do
-        if [ -d "$item" ]; then
-            dir_array+=("$(basename "$item")")  # Добавляем имя папки в массив
-            # collect_directories "$item" dir_array  # Рекурсивный вызов для подкаталогов
-        fi
+    for dir in "${apps_directories[@]}"; do
+        echo "Install \"$dir\""
+        mkdir -p $INSTALL_DIR/apps/$dir
+        echo "Copy \"$PROJ_BUILD_DIR/apps/$dir/$dir\" into \"$INSTALL_DIR/apps/$dir/$dir\""
+        cp $PROJ_BUILD_DIR/apps/$dir/$dir $INSTALL_DIR/apps/$dir/$dir
     done
-}
 
-apps_directories=()
-tests_directories=()
-collect_directories "$build_folder/apps" apps_directories
-collect_directories "$build_folder/tests" tests_directories
+    # [Optional] Save apps targets to file for vscode tasks
+    if [ $USE_VSCODE = true ] ; then
+        search_dir="$INSTALL_DIR/apps"
+        find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+    fi
 
-for dir in "${apps_directories[@]}"; do
-    mkdir -p $INSTALL_DIR/apps/$dir
-    echo "Install \"$dir\""
-    echo "Copy \"$build_folder/apps/$dir/$dir\" into \"$INSTALL_DIR/apps/$dir/$dir\""
-    cp $build_folder/apps/$dir/$dir $INSTALL_DIR/apps/$dir/$dir
-done
+fi
 
-for dir in "${tests_directories[@]}"; do
-    directories=()
-    collect_directories "$build_folder/tests/$dir" directories
-    for subDir in "${directories[@]}"; do
-        mkdir -p $INSTALL_DIR/tests/$dir/$subDir
-        echo "Install \"$subDir\""
-        echo "Copy \"$build_folder/tests/$dir/$subDir/$subDir\" into \"$INSTALL_DIR/tests/$dir/$subDir/$subDir\""
-        cp $build_folder/tests/$dir/$subDir/$subDir $INSTALL_DIR/tests/$dir/$subDir/$subDir
+if [ $BUILD_TESTS = "ON" ] ; then
+    
+    # [Optional] Copy target to bin dir
+    tests_directories=()
+    collect_directories "$PROJ_BUILD_DIR/tests" tests_directories
+    
+    for dir in "${tests_directories[@]}"; do
+        directories=()
+        collect_directories "$PROJ_BUILD_DIR/tests/$dir" directories
+        for subDir in "${directories[@]}"; do
+            mkdir -p $INSTALL_DIR/tests/$dir/$subDir
+            mkdir -p $ARTIFACTS_DIR/coverage/$dir/$subDir/
+
+            echo "Install \"$subDir\""
+            echo "Copy \"$PROJ_BUILD_DIR/tests/$dir/$subDir/$subDir\" into \"$INSTALL_DIR/tests/$dir/$subDir/$subDir\""
+            cp $PROJ_BUILD_DIR/tests/$dir/$subDir/$subDir $INSTALL_DIR/tests/$dir/$subDir/$subDir
+            cp -r $PROJ_BUILD_DIR/tests/$dir/$subDir/CMakeFiles/$subDir.dir/__/__/__/apps/$dir/src/* $ARTIFACTS_DIR/coverage/$dir/$subDir/
+        done
     done
-done
 
-mkdir -p $UTILS_DIR/run
-output_file="$UTILS_DIR/run/options"
-> "$output_file" 
+    # [Optional] Save apps targets to file for vscode tasks
+    if [ $USE_VSCODE = true ] ; then
+        search_dir="$INSTALL_DIR/tests"
+        find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +  
+    fi
 
-search_dir="$INSTALL_DIR/apps"
-find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+fi
 
-search_dir="$INSTALL_DIR/tests"
-find "$search_dir" -type f -exec bash -c 'for file; do echo "[$(basename "$file")] $(dirname "$file")/$(basename "$file")" >> "$0"; done' "$output_file" {} +
+
+
+
+
+

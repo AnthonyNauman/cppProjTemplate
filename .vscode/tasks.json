@@ -28,11 +28,21 @@
 			"default": "Release"
 		},
 		{
+			"id": "Arch",
+			"description": "Architecture.",
+			"options": [
+				"x86_64",
+				"armv7hf"
+			],
+			"type": "pickString",
+			"default": "x86_64"
+		},
+		{
 			"id": "TargetName",
 			"type": "command",
 			"command": "shellCommand.execute",
 			"args": {
-				"command": "cat ${workspaceFolder}/utils/run/options | grep apps",
+				"command": "cat ${workspaceFolder}/.vscode/run/options | grep apps",
 				"cwd": "${workspaceFolder}",
 				"env": {
 					"WORKSPACE": "${workspaceFolder[0]}",
@@ -46,7 +56,7 @@
 			"type": "command",
 			"command": "shellCommand.execute",
 			"args": {
-				"command": "cat ${workspaceFolder}/utils/run/options | grep tests",
+				"command": "cat ${workspaceFolder}/.vscode/run/options | grep tests",
 				"cwd": "${workspaceFolder}",
 				"env": {
 					"WORKSPACE": "${workspaceFolder[0]}",
@@ -59,30 +69,13 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "[Docker] C/C++: Build x86_64",
+			"label": "[Docker] C/C++: Build",
 			"command": "./scripts/build.sh",
 			"args": [
-				"--arch=x86_64",
+				"--arch=${input:Arch}",
 				"--docker",
-				"--build-type=${input:BuildType}"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"icon": {
-				"color": "terminal.ansiBlue",
-				"id": "vm-connect"
-			}
-		},
-		{
-			"type": "shell",
-			"label": "[Docker] C/C++: Build armv7hf",
-			"command": "./scripts/build.sh",
-			"args": [
-				"--arch=armv7hf",
-				"--docker",
-				"--build-type=${input:BuildType}"
+				"--build-type=${input:BuildType}",
+				"--build-target=All"
 			],
 			"group": {
 				"kind": "build",
@@ -96,7 +89,7 @@
 		{
 			"type": "shell",
 			"label": "[Docker] C/C++: Clear",
-			"command": "echo ${input:DockerPass} | sudo -S rm -rf build/docker",
+			"command": "echo ${input:DockerPass} | sudo -S rm -rf ${workspaceFolder}/build-*",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -106,45 +99,13 @@
 				"id": "chrome-close"
 			}
 		},
-		// {
-		// 	"type": "shell",
-		// 	"label": "[Local] C/C++: Build",
-		// 	"command": "./scripts/build.sh",
-		// 	"args": [
-		// 		"--arch=x86_64",
-		// 		"--build-type=${input:BuildType}"
-		// 	],
-		// 	"group": {
-		// 		"kind": "build",
-		// 		"isDefault": true
-		// 	},
-		// 	"icon": {
-		// 		"color": "terminal.ansiBlue",
-		// 		"id": "circuit-board"
-		// 	}
-		// },
 		{
 			"type": "shell",
-			"label": "[Dev Container] C/C++: Conan Install",
-			"command": "./scripts/dev_container_conan_install.sh",
+			"label": "C/C++: Build Apps",
+			"command": "./scripts/build.sh",
 			"args": [
-				"--build-type=${input:BuildType}"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"icon": {
-				"color": "terminal.ansiBlue",
-				"id": "terminal-bash"
-			}
-		},
-		{
-			"type": "shell",
-			"label": "[Dev Container] C/C++: Build",
-			"command": "./scripts/dev_container_build.sh",
-			"args": [
-				"--build-type=${input:BuildType}"
+				"--build-type=${input:BuildType}",
+				"--build-targets=Apps"
 			],
 			"group": {
 				"kind": "build",
@@ -157,8 +118,44 @@
 		},
 		{
 			"type": "shell",
-			"label": "[Dev Container] C/C++: Clear",
-			"command": "rm -rf build/dev_container",
+			"label": "C/C++: Build",
+			"command": "./scripts/build.sh",
+			"args": [
+				"--build-type=${input:BuildType}",
+				"--build-targets=All"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiBlue",
+				"id": "circuit-board"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Build & Run Tests",
+			"command": [
+				"${workspaceFolder}/.vscode/clear.sh",
+				" && ",
+				"${workspaceFolder}/scripts/build.sh --build-type=Release --build-targets=Tests",
+				" && ",
+				"${workspaceFolder}/scripts/run_all_tests.sh"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"icon": {
+				"color": "terminal.ansiBlue",
+				"id": "circuit-board"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Clear",
+			"command": "${workspaceFolder}/.vscode/clear.sh",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -169,9 +166,9 @@
 			}
 		},
 		{
-			"label": "[Dev Container] Run: Target",
+			"label": "Run: Target",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/run.sh",
+			"command": "${workspaceFolder}/.vscode/run_option.sh",
 			"args": [
 				"${input:TargetName}"
 			],
@@ -183,9 +180,9 @@
 		},
 
 		{
-			"label": "[Dev Container] Run: Test",
+			"label": "Run: Test",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/run.sh",
+			"command": "${workspaceFolder}/.vscode/run_option.sh",
 			"args": [
 				"${input:TestName}"
 			],
@@ -208,8 +205,8 @@
 		// =================================
 		{
 			"type": "shell",
-			"label": "Utils: Docs generating",
-			"command": "./scripts/config_doxygen.sh",
+			"label": "Utils: Generating Documents",
+			"command": "./scripts/generate_docs.sh",
 			"group": {
 				"kind": "test",
 				"isDefault": true
@@ -222,7 +219,7 @@
 		{
 			"type": "shell",
 			"label": "Utils: Format source files",
-			"command": "./scripts/format_all_files.sh",
+			"command": "./scripts/format.sh",
 			"group": {
 				"kind": "test",
 				"isDefault": true
