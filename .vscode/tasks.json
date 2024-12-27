@@ -196,6 +196,9 @@
 			"label": "Run: All Tests",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/run_all_tests.sh",
+			"args": [
+				"${workspaceFolder}/artifacts"
+			],
 			"problemMatcher": [],
 			"icon": {
 				"color": "terminal.ansiGreen",
