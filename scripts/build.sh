@@ -47,15 +47,15 @@ case "$1" in
     export BUILD_TARGS="$1"
     if [ $BUILD_TARGS = "Tests" ] ; then
         export USE_CONAN=true
-        export BUILD_TESTS="ON"
-        export BUILD_APPS="OFF"
+        export BUILD_TESTS=ON
+        export BUILD_APPS=OFF
     elif [ $BUILD_TARGS = "All" ] ; then
         export USE_CONAN=true
-        export BUILD_TESTS="ON"
-        export BUILD_APPS="ON"
+        export BUILD_TESTS=ON
+        export BUILD_APPS=ON
     elif [ $BUILD_TARGS = "Apps" ] ; then
-        export BUILD_TESTS="OFF"
-        export BUILD_APPS="ON"
+        export BUILD_TESTS=OFF
+        export BUILD_APPS=ON
     fi
     ;;
 -d|--docker) 
@@ -83,7 +83,7 @@ if [ $USE_DOCKER == true ]; then
         DOCKER_FILE=$PROJ_DIR/Dockerfile_armv7hf
         CONAN_PROFILE=conanProfile_armv7hf
     fi
-
+    
 
     build_dir_name=build-$COMPILER$COMPILER_VERSION-$ARCH
     img_build_dir=/build
@@ -93,9 +93,9 @@ if [ $USE_DOCKER == true ]; then
 
     mkdir -p $volume_folder
 
-    docker build --build-arg BUILD_TYPE="$BUILD_TYPE" --build-arg BUILD_FOLDER="$build_dir_name" --build-arg BUILD_TESTS="$BUILD_TESTS" --build-arg CONAN_FILE_NAME="$CONAN_PROFILE" --build-arg BUILD_TESTS="$BUILD_APPS" -t $img_name:$img_tag -f $DOCKER_FILE $PROJ_DIR
+    docker build --build-arg BUILD_TYPE="$BUILD_TYPE" --build-arg BUILD_FOLDER="$build_dir_name" --build-arg BUILD_APPS=$BUILD_APPS --build-arg BUILD_TESTS=$BUILD_TESTS --build-arg CONAN_FILE_NAME="$CONAN_PROFILE" -t $img_name:$img_tag -f $DOCKER_FILE $PROJ_DIR
     
-    docker run --rm -v $volume_folder:$img_build_dir $img_name:$img_tag
+    docker run -v $volume_folder:$img_build_dir $img_name:$img_tag
 
     exit 0
 fi
