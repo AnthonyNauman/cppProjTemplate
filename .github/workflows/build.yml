@@ -58,7 +58,7 @@ jobs:
         run: scripts/build.sh --arch=x86_64 --docker --build-type=Release --build-targets=Tests
 
       - name: Run Tests
-        run: scripts/run_all_tests.sh
+        run: scripts/run_all_tests.sh artifacts
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v4
