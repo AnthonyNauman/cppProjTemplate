@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      # - name: Install Software
-      #   run: apt-get install -y lcov
-      #   shell: bash
+      - name: Install Software
+        run: sudo apt-get install -y lcov
+        shell: bash
 
       - name: Clone Project
         uses: actions/checkout@v2
